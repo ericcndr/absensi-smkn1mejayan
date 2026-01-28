@@ -11,9 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CameraCapture } from "@/components/camera-capture"
 import { LocationStatus } from "@/components/location-status"
 import { NotificationCenter } from "@/components/notification-center"
-import { PhotoConfirmation } from "@/components/photo-confirmation"
-import { AttendanceModSelector } from "@/components/attendance-mod-selector"
-import { AttendanceMap } from "@/components/attendance-map"
 import { getCurrentLocation, isWithinRadius, calculateDistance, type Coordinates } from "@/lib/gps"
 import { detectFaceAndSpoofing } from "@/lib/face-detection"
 import { Spinner } from "@/components/ui/spinner"
@@ -28,6 +25,9 @@ import {
   setCurrentUser,
 } from "@/lib/storage"
 import { useRouter } from "next/navigation"
+import AttendanceMap from "@/components/attendance-map" // Import AttendanceMap
+import AttendanceModSelector from "@/components/attendance-mode-selector" // Import AttendanceModSelector
+import PhotoConfirmation from "@/components/photo-confirmation" // Import PhotoConfirmation
 
 interface AttendanceRecord {
   id: string

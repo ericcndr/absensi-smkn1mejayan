@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presensi Online SMKN 1 Mejayan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .login-form, .attendance-form {
+            padding: 30px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .time-display {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .date-display {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .location-status {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .location-status.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .location-status.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .location-info {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .location-info p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .location-info strong {
+            color: #1f2937;
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 300px;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview.empty {
+            color: #9ca3af;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #6b7280;
+        }
+
+        .mode-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .mode-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .attendance-record {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .attendance-record h4 {
+            color: #1f2937;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .attendance-record p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 3px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .video-preview {
+            width: 100%;
+            background: #000;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .time-display {
+                font-size: 40px;
+            }
+
+            .container {
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📱 Presensi Online</h1>
+            <p>SMKN 1 Mejayan - GPS + AI Face Recognition</p>
+        </div>
+
+        <!-- Main Content -->
+        <div id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="studentName">Nama Siswa:</label>
+                <input type="text" id="studentName" placeholder="Masukkan nama Anda">
+            </div>
+
+            <div class="form-group">
+                <label for="studentId">NIS (Nomor Induk Siswa):</label>
+                <input type="text" id="studentId" placeholder="Contoh: 001234">
+            </div>
+
+            <div class="form-group">
+                <label for="studentEmail">Email:</label>
+                <input type="email" id="studentEmail" placeholder="nama@smkn1mejayan.sch.id">
+            </div>
+
+            <button onclick="login()">Login</button>
+
+            <p style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 13px;">
+                Data akan disimpan secara otomatis. Anda dapat logout dan login kembali kapan saja.
+            </p>
+        </div>
+
+        <!-- Attendance Form (Hidden Initially) -->
+        <div id="attendanceForm" class="attendance-form hidden">
+            <!-- User Info -->
+            <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="color: #6b7280; font-size: 13px; margin-bottom: 5px;">Siswa:</p>
+                <p style="color: #1f2937; font-weight: 600; font-size: 16px;" id="userDisplayName">-</p>
+                <p style="color: #6b7280; font-size: 13px;">NIS: <span id="userDisplayId">-</span></p>
+                <button onclick="logout()" style="margin-top: 10px; background: #ef4444; padding: 8px 16px; font-size: 14px;">Logout</button>
+            </div>
+
+            <!-- Time Display -->
+            <div class="time-display" id="currentTime">00:00:00</div>
+            <div class="date-display" id="currentDate"></div>
+
+            <!-- Alerts -->
+            <div id="alertContainer"></div>
+
+            <!-- Location Status -->
+            <div id="locationStatus" class="location-status inactive">
+                <strong>📍 Status Lokasi:</strong> Mendeteksi lokasi...
+            </div>
+
+            <!-- Current Location Info -->
+            <div id="locationInfo" class="location-info hidden">
+                <p><strong>Latitude:</strong> <span id="currentLat">-</span></p>
+                <p><strong>Longitude:</strong> <span id="currentLng">-</span></p>
+                <p><strong>Jarak dari Sekolah:</strong> <span id="distance">-</span> meter</p>
+            </div>
+
+            <!-- Mode Selection -->
+            <div class="form-group">
+                <label>Pilih Mode Presensi:</label>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="checkInBtn" onclick="selectMode('check-in')">
+                        🔵 Masuk
+                    </button>
+                    <button class="mode-btn" id="checkOutBtn" onclick="selectMode('check-out')">
+                        🔴 Pulang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Camera Input -->
+            <div class="form-group">
+                <label for="photoInput">Ambil Foto untuk Verifikasi:</label>
+                <input type="file" id="photoInput" accept="image/*" onchange="capturePhoto(event)">
+            </div>
+
+            <!-- Photo Preview -->
+            <div class="photo-preview empty" id="photoPreview">
+                <span>📸 Foto akan muncul di sini</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button onclick="submitAttendance()" id="submitBtn">
+                <span id="submitBtnText">Kirim Presensi</span>
+                <span id="submitSpinner" class="hidden" style="margin-left: 8px;"><span class="spinner"></span></span>
+            </button>
+
+            <!-- Recent Attendance History -->
+            <div style="margin-top: 30px;">
+                <h3 style="color: #1f2937; margin-bottom: 15px; font-size: 16px;">📋 Riwayat Presensi:</h3>
+                <div id="attendanceHistory"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCHOOL_LAT = -7.641;
+        const SCHOOL_LNG = 111.5088;
+        const RADIUS_METERS = 1000;
+        const CHECK_IN_DEADLINE = 8; // 08:00
+
+        let selectedMode = 'check-in';
+        let currentLocation = null;
+        let capturedPhotoData = null;
+
+        // Initialize
+        window.addEventListener('load', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            loadUserFromStorage();
+            if (navigator.geolocation) {
+                setInterval(getLocation, 5000);
+                getLocation();
+            }
+        });
+
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            const dateStr = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const timeElem = document.getElementById('currentTime');
+            const dateElem = document.getElementById('currentDate');
+
+            if (timeElem) timeElem.textContent = timeStr;
+            if (dateElem) dateElem.textContent = dateStr;
+        }
+
+        function getLocation() {
+            if (!navigator.geolocation) {
+                showAlert('GPS tidak tersedia', 'error');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    currentLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+
+                    updateLocationStatus();
+                    showLocationInfo();
+                },
+                function(error) {
+                    console.log('GPS Error:', error);
+                }
+            );
+        }
+
+        function updateLocationStatus() {
+            if (!currentLocation) {
+                document.getElementById('locationStatus').className = 'location-status inactive';
+                document.getElementById('locationStatus').innerHTML = '<strong>📍 Status Lokasi:</strong> GPS tidak aktif';
+                return;
+            }
+
+            const distance = calculateDistance(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                SCHOOL_LAT,
+                SCHOOL_LNG
+            );
+
+            const withinRadius = distance <= RADIUS_METERS;
+            const status = document.getElementById('locationStatus');
+
+            if (withinRadius) {
+                status.className = 'location-status active';
+                status.innerHTML = `<strong>✅ Status Lokasi:</strong> Berada dalam jangkauan sekolah (${Math.round(distance)}m)`;
+            } else {
+                status.className = 'location-status inactive';
+                status.innerHTML = `<strong>❌ Status Lokasi:</strong> Berada di luar jangkauan (${Math.round(distance)}m dari ${RADIUS_METERS}m)`;
+            }
+        }
+
+        function showLocationInfo() {
+            if (!currentLocation) return;
+
+            document.getElementById('locationInfo').classList.remove('hidden');
+            document.getElementById('currentLat').textContent = currentLocation.latitude.toFixed(6);
+            document.getElementById('currentLng').textContent = currentLocation.longitude.toFixed(6);
+
+            const distance = calculateDistance(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                SCHOOL_LAT,
+                SCHOOL_LNG
+            );
+            document.getElementById('distance').textContent = Math.round(distance);
+        }
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371000; // Radius Bumi dalam meter
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function login() {
+            const name = document.getElementById('studentName').value;
+            const id = document.getElementById('studentId').value;
+            const email = document.getElementById('studentEmail').value;
+
+            if (!name || !id || !email) {
+                showAlert('Semua field harus diisi', 'error');
+                return;
+            }
+
+            const user = { name, id, email, loginTime: new Date().toISOString() };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            showAttendanceForm();
+            loadAttendanceHistory();
+        }
+
+        function logout() {
+            if (confirm('Anda yakin ingin logout? Data presensi akan tetap tersimpan.')) {
+                localStorage.removeItem('currentUser');
+                showLoginForm();
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentId').value = '';
+                document.getElementById('studentEmail').value = '';
+                capturedPhotoData = null;
+                resetPhotoPreview();
+            }
+        }
+
+        function loadUserFromStorage() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                document.getElementById('studentName').value = userData.name;
+                document.getElementById('studentId').value = userData.id;
+                document.getElementById('studentEmail').value = userData.email;
+                showAttendanceForm();
+                displayUserInfo();
+                loadAttendanceHistory();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        function displayUserInfo() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            document.getElementById('userDisplayName').textContent = user.name;
+            document.getElementById('userDisplayId').textContent = user.id;
+        }
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            document.getElementById('checkInBtn').classList.toggle('active', mode === 'check-in');
+            document.getElementById('checkOutBtn').classList.toggle('active', mode === 'check-out');
+        }
+
+        function capturePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                capturedPhotoData = e.target.result;
+                const preview = document.getElementById('photoPreview');
+                preview.innerHTML = `<img src="${capturedPhotoData}" alt="Photo">`;
+                preview.classList.remove('empty');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetPhotoPreview() {
+            document.getElementById('photoPreview').innerHTML = '<span>📸 Foto akan muncul di sini</span>';
+            document.getElementById('photoPreview').classList.add('empty');
+            document.getElementById('photoInput').value = '';
+            capturedPhotoData = null;
+        }
+
+        function submitAttendance() {
+            if (!currentLocation) {
+                showAlert('Lokasi tidak terdeteksi. Pastikan GPS aktif.', 'error');
+                return;
+            }
+
+            if (!capturedPhotoData) {
+                showAlert('Silakan ambil foto terlebih dahulu', 'error');
+                return;
+            }
+
+            const distance = calculateDistance(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                SCHOOL_LAT,
+                SCHOOL_LNG
+            );
+
+            if (distance > RADIUS_METERS) {
+                showAlert(`Anda berada di luar radius sekolah (${Math.round(distance)}m)`, 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            document.getElementById('submitSpinner').classList.remove('hidden');
+
+            setTimeout(() => {
+                const now = new Date();
+                const time = now.toTimeString().split(' ')[0].substring(0, 5);
+                const isLate = now.getHours() > CHECK_IN_DEADLINE || 
+                             (now.getHours() === CHECK_IN_DEADLINE && now.getMinutes() > 0);
+                const status = selectedMode === 'check-in' 
+                    ? (isLate ? 'late' : 'present') 
+                    : 'checked-out';
+
+                const record = {
+                    id: Date.now().toString(),
+                    date: now.toISOString().split('T')[0],
+                    time: time,
+                    mode: selectedMode,
+                    status: status,
+                    location: currentLocation,
+                    distance: distance,
+                    photo: capturedPhotoData
+                };
+
+                let records = JSON.parse(localStorage.getItem('attendanceRecords') || '[]');
+                records.push(record);
+                localStorage.setItem('attendanceRecords', JSON.stringify(records));
+
+                const message = selectedMode === 'check-in'
+                    ? `Berhasil check-in pada ${time}${isLate ? ' (Terlambat)' : ''}`
+                    : `Berhasil check-out pada ${time}`;
+
+                showAlert(message + '. Foto telah dikirim ke admin.', 'success');
+                resetPhotoPreview();
+                loadAttendanceHistory();
+
+                submitBtn.disabled = false;
+                document.getElementById('submitSpinner').classList.add('hidden');
+            }, 1500);
+        }
+
+        function loadAttendanceHistory() {
+            const records = JSON.parse(localStorage.getItem('attendanceRecords') || '[]');
+            const today = new Date().toISOString().split('T')[0];
+            const todayRecords = records.filter(r => r.date === today).reverse();
+
+            const historyDiv = document.getElementById('attendanceHistory');
+            
+            if (todayRecords.length === 0) {
+                historyDiv.innerHTML = '<p style="color: #9ca3af; text-align: center; padding: 20px;">Belum ada presensi hari ini</p>';
+                return;
+            }
+
+            historyDiv.innerHTML = todayRecords.map(record => `
+                <div class="attendance-record">
+                    <h4>
+                        ${record.mode === 'check-in' ? '🔵 Check-in' : '🔴 Check-out'}
+                        <span class="badge ${record.status === 'late' ? 'badge-warning' : 'badge-success'}">
+                            ${record.status === 'late' ? '⏰ Terlambat' : record.status === 'checked-out' ? 'Pulang' : '✓ Hadir'}
+                        </span>
+                    </h4>
+                    <p>Waktu: <strong>${record.time}</strong></p>
+                    <p>Jarak: <strong>${Math.round(record.distance)}m dari sekolah</strong></p>
+                </div>
+            `).join('');
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 4000);
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('attendanceForm').classList.add('hidden');
+        }
+
+        function showAttendanceForm() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('attendanceForm').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { Camera, X, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -74,10 +74,10 @@ export function CameraCapture({ onCapture, onCancel }: CameraCaptureProps) {
   }, [stopCamera, onCancel])
 
   // Auto-start camera on mount
-  useState(() => {
+  useEffect(() => {
     startCamera()
     return () => stopCamera()
-  })
+  }, [startCamera, stopCamera])
 
   return (
     <Card className="w-full max-w-lg mx-auto">
